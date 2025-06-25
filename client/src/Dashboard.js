@@ -56,15 +56,20 @@ function Dashboard() {
 
     // Threshold breaches
     const thresholdBreached =
-      (!isMissing(temperature) && temperature > 37) ||
-      (!isMissing(humidity) && humidity > 75) ||
-      (mq9 &&
-        ((!isMissing(mq9.co) && mq9.co > 10) ||
-          (!isMissing(mq9.ch4) && mq9.ch4 > 5) ||
-          (!isMissing(mq9.lpg) && mq9.lpg > 5))) ||
-      (mq135 &&
-        ((!isMissing(mq135.co2) && mq135.co2 > 1000) ||
-          (!isMissing(mq135.nh3) && mq135.nh3 > 10)));
+  (!isMissing(temperature) && temperature > 37) || // Always alert if too hot
+
+  // Only alert for humidity if it's both hot and humid
+  (!isMissing(temperature) && !isMissing(humidity) &&
+   temperature > 32 && humidity > 75) ||
+
+  (mq9 &&
+    ((!isMissing(mq9.co) && mq9.co > 10) ||
+     (!isMissing(mq9.ch4) && mq9.ch4 > 5) ||
+     (!isMissing(mq9.lpg) && mq9.lpg > 5))) ||
+
+  (mq135 &&
+    ((!isMissing(mq135.co2) && mq135.co2 > 1000) ||
+     (!isMissing(mq135.nh3) && mq135.nh3 > 10)));
 
     // Sensor missing conditions
     const missingSensors =
