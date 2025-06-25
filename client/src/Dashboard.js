@@ -56,8 +56,8 @@ function Dashboard() {
 
     // Threshold breaches
     const thresholdBreached =
-      (!isMissing(temperature) && temperature > 35) ||
-      (!isMissing(humidity) && humidity > 70) ||
+      (!isMissing(temperature) && temperature > 37) ||
+      (!isMissing(humidity) && humidity > 75) ||
       (mq9 &&
         ((!isMissing(mq9.co) && mq9.co > 10) ||
           (!isMissing(mq9.ch4) && mq9.ch4 > 5) ||
