@@ -124,7 +124,7 @@ function Dashboard() {
             const ageInSeconds =
               (Date.now() - new Date(latest.timestamp)) / 1000;
             setLatestData(latest);
-            setIsLive(ageInSeconds <= 7);
+            setIsLive(ageInSeconds <= 12);
           } else {
             setLatestData(null);
             setIsLive(false);
@@ -272,7 +272,7 @@ function Dashboard() {
             })}
             )
           </h4>
-          <p>⏳ Refreshing in {countdown}s</p>
+          <p style={{fontSize: '0.8rem', fontFamily: "'Courier New', monospace", justifyContent:"flex-end"}}>⏳ Refreshing in {countdown}s</p>
           {latestTempWarning && (
             <p style={{ color: "red" }}>⚠️ Temperature is too high!</p>
           )}
@@ -306,7 +306,7 @@ function Dashboard() {
       ) : (
         <div className="no-data">
           <h4 style={{ justifyContent: "flex-end" }}>🔴 No Live Data</h4>
-          <p>Waiting for recent sensor data (last 7 seconds)...</p>
+          <p>Waiting for recent sensor data (last 12 seconds)...</p>
         </div>
       )}
 
