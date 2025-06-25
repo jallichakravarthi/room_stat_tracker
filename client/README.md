@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# Room Sensor Monitoring System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a full-stack IoT application for real-time monitoring of room environmental data using a Raspberry Pi, gas and temperature/humidity sensors, and a MERN (MongoDB, Express, React, Node.js) web application.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Real-time temperature, humidity, CO, CH4, LPG, CO2, and NH3 monitoring
+- Live data dashboard with auto-refresh
+- Historical data visualization with averaging (10-minute intervals)
+- Email alerts on threshold breach or sensor failures
+- Authenticated users can:
+  - View extended history (up to 14 days)
+  - Export data to CSV
+- Non-authenticated users can:
+  - View last 10 hours of data
+  - Access real-time readings without login
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: React, Chart.js, CSS
+- **Backend**: Node.js, Express, MongoDB (with Mongoose)
+- **Authentication**: JWT (JSON Web Tokens)
+- **Hardware**: Raspberry Pi, DHT22, MQ9, MQ135
+- **Email Alerts**: Nodemailer (via Gmail SMTP)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Live Demo
 
-### `npm test`
+Frontend: [https://your-frontend.vercel.app](https://your-frontend.vercel.app)  
+Backend API: [https://room-stat-tracker.onrender.com](https://room-stat-tracker.onrender.com)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Directory Structure
 
-### `npm run build`
+room_stat_tracker/
+├── backend/
+│ ├── models/
+│ ├── routes/
+│ ├── middleware/
+│ └── server.js
+├── frontend/
+│ └── src/
+│ ├── components/
+│ └── App.js
+└── raspberry_pi/
+  └── send_sensor_data.py
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## How It Works
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Sensor Readings**: Raspberry Pi reads data from DHT22, MQ9, MQ135.
+2. **Data Transmission**: Data is sent via HTTP POST every 4–5 seconds to the backend API.
+3. **Backend Handling**: Sensor data is stored in MongoDB. If a threshold is breached, the backend sends email alerts to all registered users.
+4. **Frontend Display**: React frontend fetches and displays the data every 5 seconds. If the latest data is older than 12 seconds, it shows "No Live Data".
 
-### `npm run eject`
+## Sensor Thresholds
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Temperature**: > 37°C
+- **Humidity**: Only alerts if temperature > 32°C and humidity > 75%
+- **MQ9**
+  - CO > 10
+  - CH4 > 5
+  - LPG > 5
+- **MQ135**
+  - CO2 > 1000 ppm
+  - NH3 > 10 ppm
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Setup Instructions
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Raspberry Pi
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Connect sensors to the Pi
+2. Clone the project and go to `raspberry_pi/`
+3. Install dependencies:
+   ```bash
+   pip install Adafruit_DHT spidev requests
