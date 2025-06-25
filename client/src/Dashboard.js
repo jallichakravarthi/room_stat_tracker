@@ -272,9 +272,9 @@ function Dashboard() {
             })}
             )
           </h4>
-          <p style={{fontSize: '0.8rem', fontFamily: "'Courier New', monospace", justifyContent:"flex-end"}}>⏳ Refreshing in {countdown}s</p>
+          <p style={{fontSize: '0.8rem', fontFamily: "'Courier New', monospace", justifyContent:"flex-end"}}>Refreshing in {countdown}s</p>
           {latestTempWarning && (
-            <p style={{ color: "red" }}>⚠️ Temperature is too high!</p>
+            <p style={{ color: "red" }}>Temperature is too high!</p>
           )}
           <ul>
             <li>
@@ -317,7 +317,7 @@ function Dashboard() {
 
       <hr />
 
-      <h2>📜 Last 10 Sensor Readings</h2>
+      <h2>Last 10 Sensor Readings</h2>
       <div className="table-wrapper">
         <table border="1" cellPadding="10">
           <thead>
