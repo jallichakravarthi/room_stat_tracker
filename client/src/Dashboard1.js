@@ -142,6 +142,7 @@ function Dashboard1() {
     }
 
     const headers = [
+      "Date",
       "Timestamp",
       "Avg Temperature",
       "Avg Humidity",

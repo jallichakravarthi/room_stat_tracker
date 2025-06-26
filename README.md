@@ -49,18 +49,18 @@ This is a full-stack IoT application for real-time monitoring of room environmen
 ## 📁 Directory Structure
 
 ```
-room_stat_tracker/
-├── backend/
-│   ├── models/
-│   ├── routes/
-│   ├── middleware/
-│   └── server.js
-├── client/
-│   └── src/
-│       ├── components/
-│       └── App.js
-└── raspberry_pi/
-    └── send_sensor_data.py
+room_stat_tracker/  
+├── backend/  
+│   ├── models/  
+│   ├── routes/  
+│   ├── middleware/  
+│   └── server.js  
+├── client/  
+│   └── src/  
+│       ├── components/  
+│       └── App.js  
+└── raspberry_pi/  
+    └── send_sensor_data.py  
 ```
 
 ---
