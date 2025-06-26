@@ -21,7 +21,7 @@ router.post("/email", requireAuth, async (req, res) => {
 
   try {
     const {
-      subject = "Sensor Alert 🚨",
+      subject,
       temperature,
       humidity,
       mq9,
@@ -59,6 +59,10 @@ ${missingSensors ? "⚠️ Some sensors are not reporting properly." : ""}
     if (!allEmails.length) {
       return res.status(404).json({ error: "No registered user emails found." });
     }
+
+    console.log("Emails to send alert to:", allEmails);
+    console.log("Sending email with subject:", subject);
+    console.log("Message body:\n", message);
 
     // ✅ Send bulk email
     await transporter.sendMail({

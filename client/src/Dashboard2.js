@@ -23,13 +23,12 @@ ChartJS.register(
   Legend
 );
 
-function Dashboard() {
+function Dashboard2() {
   const [sensorData, setSensorData] = useState([]);
   const [latestData, setLatestData] = useState(null);
   const [isLive, setIsLive] = useState(false);
   const [countdown, setCountdown] = useState(5);
   const [hours, setHours] = useState(10);
-  const [hasAlerted, setHasAlerted] = useState(false);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
@@ -42,80 +41,8 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (!latestData || !isLive) {
-      setHasAlerted(false); // Reset alert state if not live
-      return;
-    }
-
-    const isMissing = (value) => value === undefined || value === null;
-
-    const temperature = latestData.temperature;
-    const humidity = latestData.humidity;
-    const mq9 = latestData.mq9;
-    const mq135 = latestData.mq135;
-
-    // Threshold breaches
-    const thresholdBreached =
-  (!isMissing(temperature) && temperature > 37) || // Always alert if too hot
-
-  // Only alert for humidity if it's both hot and humid
-  (!isMissing(temperature) && !isMissing(humidity) &&
-   temperature > 32 && humidity > 75) ||
-
-  (mq9 &&
-    ((!isMissing(mq9.co) && mq9.co > 10) ||
-     (!isMissing(mq9.ch4) && mq9.ch4 > 5) ||
-     (!isMissing(mq9.lpg) && mq9.lpg > 5))) ||
-
-  (mq135 &&
-    ((!isMissing(mq135.co2) && mq135.co2 > 1000) ||
-     (!isMissing(mq135.nh3) && mq135.nh3 > 10)));
-
-    // Sensor missing conditions
-    const missingSensors =
-      isMissing(temperature) ||
-      isMissing(humidity) ||
-      !mq9 ||
-      isMissing(mq9?.co) ||
-      isMissing(mq9?.ch4) ||
-      isMissing(mq9?.lpg) ||
-      !mq135 ||
-      isMissing(mq135?.co2) ||
-      isMissing(mq135?.nh3);
-
-    const alertNeeded = thresholdBreached || missingSensors;
-
-    if (alertNeeded && !hasAlerted) {
-      fetch(`${process.env.REACT_APP_API_URL}/api/alerts/email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          subject: "🚨 Sensor Alert: Room Tracker",
-          temperature,
-          humidity,
-          mq9: mq9 || {},
-          mq135: mq135 || {},
-          missingSensors,
-          timestamp: latestData.timestamp,
-        }),
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          console.log("✅ Alert email triggered:", res);
-          setHasAlerted(true);
-        })
-        .catch((err) => {
-          console.error("❌ Error sending alert email:", err);
-        });
-    }
-  }, [latestData, isLive]);
-
-  useEffect(() => {
     const fetchData = () => {
-      fetch(`${process.env.REACT_APP_API_URL}/api/sensors`) // This will need to be changed if you want to respect hour range server-side
+      fetch(`${process.env.REACT_APP_API_URL}/api/room2`)
         .then((res) => res.json())
         .then((data) => {
           const timeAgo = subHours(new Date(), hours);
@@ -154,32 +81,95 @@ function Dashboard() {
       return;
     }
 
+    const input = prompt(
+      "Enter average interval (e.g., 30m, 1h, 2d)\nMin: 30m, Max: 14d"
+    );
+    if (!input) return;
+
+    const match = input.match(/^(\d+)(m|h|d)$/);
+    if (!match) {
+      alert(
+        "Invalid format. Use numbers with 'm', 'h', or 'd' (e.g., 30m, 1h)"
+      );
+      return;
+    }
+
+    const [_, numStr, unit] = match;
+    const num = parseInt(numStr, 10);
+    if (
+      (unit === "m" && (num < 30 || num > 20160)) || // 30 minutes to 14 days in minutes
+      (unit === "h" && (num < 1 || num > 336)) ||
+      (unit === "d" && (num < 0.021 || num > 14))
+    ) {
+      alert("Interval must be between 30 minutes and 14 days");
+      return;
+    }
+
+    // Convert interval to milliseconds
+    const intervalMs =
+      unit === "m"
+        ? num * 60 * 1000
+        : unit === "h"
+        ? num * 3600000
+        : num * 86400000;
+
+    const buckets = new Map();
+
+    for (const entry of sensorData) {
+      const time = new Date(entry.timestamp).getTime();
+      const bucketKey = Math.floor(time / intervalMs) * intervalMs;
+
+      if (!buckets.has(bucketKey)) {
+        buckets.set(bucketKey, {
+          count: 0,
+          temperature: 0,
+          humidity: 0,
+          mq9: { co: 0, ch4: 0, lpg: 0 },
+          mq135: { co2: 0, nh3: 0 },
+        });
+      }
+
+      const bucket = buckets.get(bucketKey);
+      bucket.count++;
+      bucket.temperature += entry.temperature ?? 0;
+      bucket.humidity += entry.humidity ?? 0;
+      bucket.mq9.co += entry.mq9?.co ?? 0;
+      bucket.mq9.ch4 += entry.mq9?.ch4 ?? 0;
+      bucket.mq9.lpg += entry.mq9?.lpg ?? 0;
+      bucket.mq135.co2 += entry.mq135?.co2 ?? 0;
+      bucket.mq135.nh3 += entry.mq135?.nh3 ?? 0;
+    }
+
     const headers = [
       "Timestamp",
-      "Temperature",
-      "Humidity",
-      "MQ9_CO",
-      "MQ9_CH4",
-      "MQ9_LPG",
-      "MQ135_CO2",
-      "MQ135_NH3",
+      "Avg Temperature",
+      "Avg Humidity",
+      "Avg MQ9_CO",
+      "Avg MQ9_CH4",
+      "Avg MQ9_LPG",
+      "Avg MQ135_CO2",
+      "Avg MQ135_NH3",
     ];
-    const rows = sensorData.map((d) => [
-      new Date(d.timestamp).toLocaleString(),
-      d.temperature ?? "N/A",
-      d.humidity ?? "N/A",
-      d.mq9?.co ?? "N/A",
-      d.mq9?.ch4 ?? "N/A",
-      d.mq9?.lpg ?? "N/A",
-      d.mq135?.co2 ?? "N/A",
-      d.mq135?.nh3 ?? "N/A",
-    ]);
+
+    const rows = [...buckets.entries()]
+      .sort((a, b) => a[0] - b[0]) // Sort by timestamp
+      .map(([timestamp, b]) => [
+        new Date(timestamp).toLocaleString(),
+        (b.temperature / b.count).toFixed(2),
+        (b.humidity / b.count).toFixed(2),
+        (b.mq9.co / b.count).toFixed(2),
+        (b.mq9.ch4 / b.count).toFixed(2),
+        (b.mq9.lpg / b.count).toFixed(2),
+        (b.mq135.co2 / b.count).toFixed(2),
+        (b.mq135.nh3 / b.count).toFixed(2),
+      ]);
+
     const csvContent = [headers, ...rows].map((e) => e.join(",")).join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", "sensor_data.csv");
+    link.setAttribute("download", `sensor_data_avg_${input}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -200,7 +190,10 @@ function Dashboard() {
   const bucketedData = {};
   sensorData.forEach((entry) => {
     const date = new Date(entry.timestamp);
-    const key = `${date.getHours()}:${Math.floor(date.getMinutes() / 10) * 10}`;
+    const bucketMinutes = Math.floor(date.getMinutes() / 30) * 30;
+    const key = `${date.getHours()}:${bucketMinutes
+      .toString()
+      .padStart(2, "0")}`;
     if (!bucketedData[key]) {
       bucketedData[key] = { tempSum: 0, humSum: 0, count: 0 };
     }
@@ -209,7 +202,9 @@ function Dashboard() {
     bucketedData[key].count += 1;
   });
 
-  const bucketLabels = Object.keys(bucketedData);
+  const bucketLabels = Object.keys(bucketedData).sort((a, b) =>
+    a.localeCompare(b, undefined, { numeric: true })
+  );
   const avgTemps = bucketLabels.map((k) =>
     (bucketedData[k].tempSum / bucketedData[k].count).toFixed(2)
   );
@@ -277,7 +272,15 @@ function Dashboard() {
             })}
             )
           </h4>
-          <p style={{fontSize: '0.8rem', fontFamily: "'Courier New', monospace", justifyContent:"flex-end"}}>Refreshing in {countdown}s</p>
+          <p
+            style={{
+              fontSize: "0.8rem",
+              fontFamily: "'Courier New', monospace",
+              justifyContent: "flex-end",
+            }}
+          >
+            Refreshing in {countdown}s
+          </p>
           {latestTempWarning && (
             <p style={{ color: "red" }}>Temperature is too high!</p>
           )}
@@ -317,7 +320,7 @@ function Dashboard() {
 
       <hr />
 
-      <h2>📊 Avg Temp & Humidity (Last {hours} Hours / 10-min intervals)</h2>
+      <h2>📊 Avg Temp & Humidity (Last {hours} Hours / 30-min intervals)</h2>
       <Line data={chartData} />
 
       <hr />
@@ -365,4 +368,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Dashboard2;

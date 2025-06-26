@@ -2,73 +2,163 @@
 
 This is a full-stack IoT application for real-time monitoring of room environmental data using a Raspberry Pi, gas and temperature/humidity sensors, and a MERN (MongoDB, Express, React, Node.js) web application.
 
-## Features
+---
 
-- Real-time temperature, humidity, CO, CH4, LPG, CO2, and NH3 monitoring
-- Live data dashboard with auto-refresh
-- Historical data visualization with averaging (10-minute intervals)
-- Email alerts on threshold breach or sensor failures
-- Authenticated users can:
-  - View extended history (up to 14 days)
-  - Export data to CSV
-- Non-authenticated users can:
-  - View last 10 hours of data
-  - Access real-time readings without login
+## 🚀 Features
 
-## Technologies Used
+* Real-time monitoring of:
 
-- **Frontend**: React, Chart.js, CSS
-- **Backend**: Node.js, Express, MongoDB (with Mongoose)
-- **Authentication**: JWT (JSON Web Tokens)
-- **Hardware**: Raspberry Pi, DHT22, MQ9, MQ135
-- **Email Alerts**: Nodemailer (via Gmail SMTP)
+  * Temperature
+  * Humidity
+  * CO, CH₄, LPG (via MQ9)
+  * CO₂, NH₃ (via MQ135)
+* Live dashboard with auto-refresh
+* Sensor status and live/offline detection
+* Email alerts on:
 
-## Live Demo
+  * Sensor threshold breach
+  * Sensor failure
+* Data history:
 
-Frontend: [https://your-frontend.vercel.app](https://your-frontend.vercel.app)  
-Backend API: [https://room-stat-tracker.onrender.com](https://room-stat-tracker.onrender.com)
+  * View up to 14 days (for authenticated users)
+  * Last 10 hours visible without login
+* CSV export with selectable averaging intervals
+* Authentication using JWT
 
-## Directory Structure
+---
 
+## 🛠 Technologies Used
+
+| Layer    | Tech Stack                           |
+| -------- | ------------------------------------ |
+| Frontend | React, Chart.js, CSS                 |
+| Backend  | Node.js, Express, MongoDB (Mongoose) |
+| Auth     | JWT (JSON Web Tokens)                |
+| Alerts   | Nodemailer (Gmail SMTP)              |
+| Hardware | Raspberry Pi, DHT22, MQ9, MQ135      |
+
+---
+
+## 🌐 Live Links
+
+* **Frontend**: [https://your-frontend.vercel.app](https://your-frontend.vercel.app)
+* **Backend API**: [https://room-stat-tracker.onrender.com](https://room-stat-tracker.onrender.com)
+
+---
+
+## 📁 Directory Structure
+
+```
 room_stat_tracker/
 ├── backend/
-│ ├── models/
-│ ├── routes/
-│ ├── middleware/
-│ └── server.js
-├── frontend/
-│ └── src/
-│ ├── components/
-│ └── App.js
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   └── server.js
+├── client/
+│   └── src/
+│       ├── components/
+│       └── App.js
 └── raspberry_pi/
-  └── send_sensor_data.py
+    └── send_sensor_data.py
+```
 
+---
 
-## How It Works
+## 🔄 How It Works
 
-1. **Sensor Readings**: Raspberry Pi reads data from DHT22, MQ9, MQ135.
-2. **Data Transmission**: Data is sent via HTTP POST every 4–5 seconds to the backend API.
-3. **Backend Handling**: Sensor data is stored in MongoDB. If a threshold is breached, the backend sends email alerts to all registered users.
-4. **Frontend Display**: React frontend fetches and displays the data every 5 seconds. If the latest data is older than 12 seconds, it shows "No Live Data".
+1. **Sensor Reading**
+   Raspberry Pi collects temperature, humidity, and gas concentration values from connected sensors.
 
-## Sensor Thresholds
+2. **Data Transmission**
+   Sensor values are sent every 4–5 seconds via HTTP POST to the backend API.
 
-- **Temperature**: > 37°C
-- **Humidity**: Only alerts if temperature > 32°C and humidity > 75%
-- **MQ9**
-  - CO > 10
-  - CH4 > 5
-  - LPG > 5
-- **MQ135**
-  - CO2 > 1000 ppm
-  - NH3 > 10 ppm
+3. **Backend Processing**
+   The server stores incoming data in MongoDB and checks for threshold breaches. If conditions are met, an email alert is triggered to all users.
 
-## Setup Instructions
+4. **Frontend Visualization**
+   The React app polls the backend every 5 seconds for updates. If the latest data is older than 12 seconds, the dashboard shows "No Live Data".
 
-### Raspberry Pi
+---
 
-1. Connect sensors to the Pi
-2. Clone the project and go to `raspberry_pi/`
-3. Install dependencies:
-   ```bash
-   pip install Adafruit_DHT spidev requests
+## ⚠ Sensor Thresholds
+
+| Parameter   | Condition for Alert       |
+| ----------- | ------------------------- |
+| Temperature | > 37°C                    |
+| Humidity    | > 75% **AND** temp > 32°C |
+| CO (MQ9)    | > 10                      |
+| CH₄ (MQ9)   | > 5                       |
+| LPG (MQ9)   | > 5                       |
+| CO₂ (MQ135) | > 1000 ppm                |
+| NH₃ (MQ135) | > 10 ppm                  |
+
+---
+
+## 📦 Raspberry Pi Setup
+
+### 1. Connect Sensors
+
+* DHT22 → GPIO 4
+* MQ9 → MCP3008 Channel 1
+* MQ135 → MCP3008 Channel 0
+
+### 2. Install Required Python Libraries
+
+```bash
+sudo apt-get update
+sudo apt-get install python3-pip
+pip3 install Adafruit_DHT spidev requests
+```
+
+### 3. Enable SPI on Pi
+
+```bash
+sudo raspi-config
+# Go to Interfacing Options > SPI > Enable
+```
+
+Then reboot:
+
+```bash
+sudo reboot
+```
+
+### 4. Run the Python Script
+
+```bash
+cd raspberry_pi
+python3 send_sensor_data.py
+```
+
+Sensor values will now be sent to the backend every 4 seconds.
+
+---
+
+## 📈 CSV Export
+
+* Users can choose average intervals like:
+
+  * `30m`, `1h`, `6h`, `1d`, etc.
+* Max interval: **14 days**
+* CSV includes average temperature, humidity, and gas concentrations per interval.
+
+---
+
+## 🔐 Authentication
+
+* Users must **register and log in** to:
+
+  * Export CSVs
+  * View historical data beyond 10 hours
+  * Receive email alerts
+
+---
+
+## ✅ Future Improvements
+
+* Graphs for individual gases
+* Sensor calibration interface
+* Push notifications
+* Room comparison dashboard
+

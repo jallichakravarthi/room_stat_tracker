@@ -4,7 +4,7 @@ const sensorDataSchema = new mongoose.Schema({
   timestamp: {
     type: Date,
     default: Date.now,
-    expires: 60 * 60 * 24 * 30, // = 30 days in seconds
+    expires: 60 * 60 * 24 * 30,
   },
   temperature: Number,
   humidity: Number,
@@ -19,4 +19,4 @@ const sensorDataSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('SensorData', sensorDataSchema);
+module.exports = mongoose.model('SensorDataRoom2', sensorDataSchema);

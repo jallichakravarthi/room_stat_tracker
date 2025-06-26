@@ -26,8 +26,11 @@ mongoose.connect(process.env.MONGO_URI, {
   .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
-const sensorRoutes = require('./routes/sensorRoutes');
-app.use('/api/sensors', sensorRoutes);
+const room1Routes = require('./routes/sensorRoom1Routes');
+app.use('/api/room1', room1Routes);
+
+const room2Routes = require('./routes/sensorRoom2Routes');
+app.use('/api/room2', room2Routes);
 
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
