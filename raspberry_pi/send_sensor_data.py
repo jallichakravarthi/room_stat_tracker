@@ -16,7 +16,7 @@ RO_MQ9 = 14.8    # Calibrated
 DHT_SENSOR = Adafruit_DHT.DHT22
 DHT_PIN = 4  # BCM pin
 
-WEBHOOK_URL = "https://room-stat-tracker.onrender.com/api/sensors"
+WEBHOOK_URL = "https://room-stat-tracker.onrender.com/api/room1"
 
 # === Functions ===
 def read_adc(channel):
