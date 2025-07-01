@@ -4,7 +4,7 @@ This is a full-stack IoT application for real-time monitoring of room environmen
 
 ---
 
-## 🚀 Features
+## Features
 
 * Real-time monitoring of:
 
@@ -27,7 +27,7 @@ This is a full-stack IoT application for real-time monitoring of room environmen
 
 ---
 
-## 🛠 Technologies Used
+## Technologies Used
 
 | Layer    | Tech Stack                           |
 | -------- | ------------------------------------ |
@@ -39,14 +39,14 @@ This is a full-stack IoT application for real-time monitoring of room environmen
 
 ---
 
-## 🌐 Live Links
+## Live Links
 
 * **Frontend**: [https://your-frontend.vercel.app](https://your-frontend.vercel.app)
 * **Backend API**: [https://room-stat-tracker.onrender.com](https://room-stat-tracker.onrender.com)
 
 ---
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```
 room_stat_tracker/  
@@ -65,7 +65,7 @@ room_stat_tracker/
 
 ---
 
-## 🔄 How It Works
+## How It Works
 
 1. **Sensor Reading**
    Raspberry Pi collects temperature, humidity, and gas concentration values from connected sensors.
@@ -81,7 +81,7 @@ room_stat_tracker/
 
 ---
 
-## ⚠ Sensor Thresholds
+## Sensor Thresholds
 
 | Parameter   | Condition for Alert       |
 | ----------- | ------------------------- |
@@ -95,13 +95,15 @@ room_stat_tracker/
 
 ---
 
-## 📦 Raspberry Pi Setup
+## Raspberry Pi Setup
 
 ### 1. Connect Sensors
 
 * DHT22 → GPIO 4
 * MQ9 → MCP3008 Channel 1
 * MQ135 → MCP3008 Channel 0
+
+  ![Circuit Diagram](./raspberry_pi/Schematic_Raspberry_Pi_room_stat.png)
 
 ### 2. Install Required Python Libraries
 
@@ -135,7 +137,7 @@ Sensor values will now be sent to the backend every 4 seconds.
 
 ---
 
-## 📈 CSV Export
+## CSV Export
 
 * Users can choose average intervals like:
 
@@ -145,7 +147,7 @@ Sensor values will now be sent to the backend every 4 seconds.
 
 ---
 
-## 🔐 Authentication
+## Authentication
 
 * Users must **register and log in** to:
 
@@ -155,7 +157,7 @@ Sensor values will now be sent to the backend every 4 seconds.
 
 ---
 
-## ✅ Future Improvements
+## Future Improvements
 
 * Graphs for individual gases
 * Sensor calibration interface
