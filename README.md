@@ -145,12 +145,20 @@ Sensor values will now be sent to the backend every 4 seconds.
 
 ---
 
+## 🖼️ Hardware Schematic
+
+Below is the schematic for the Raspberry Pi Room Stat Tracker setup:
+
+![Raspberry Pi Schematic](raspberry_pi/Schematic_Raspberry_Pi_room_stat_2025-07-01.png)
+
+---
+
 ## 🔐 Authentication
 
 * Users must **register and log in** to:
 
   * Export CSVs
-  * View historical data beyond 10 hours
+  * View historical data beyond 6 hours
   * Receive email alerts
 
 ---
