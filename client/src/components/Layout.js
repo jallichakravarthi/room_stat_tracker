@@ -14,18 +14,31 @@ const Layout = ({ children, isFullscreen, onToggleFullscreen }) => {
     document.documentElement.classList.toggle('dark', savedTheme === 'dark');
   }, []);
 
+  // Track previous isMobile to only update sidebar when device type changes
+  const prevIsMobile = React.useRef();
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth <= 1024;
       setIsMobile(mobile);
-      if (mobile) {
-        setIsCollapsed(false);
-        setIsSidebarOpen(false);
-      } else {
-        setIsSidebarOpen(true);
+      if (prevIsMobile.current === undefined) {
+        // On first mount, set sidebar based on device
+        if (mobile) {
+          setIsCollapsed(false);
+          setIsSidebarOpen(false);
+        } else {
+          setIsSidebarOpen(true);
+        }
+      } else if (prevIsMobile.current !== mobile) {
+        // Only update when device type changes
+        if (mobile) {
+          setIsCollapsed(false);
+          setIsSidebarOpen(false);
+        } else {
+          setIsSidebarOpen(true);
+        }
       }
+      prevIsMobile.current = mobile;
     };
-    
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -81,6 +94,21 @@ const Layout = ({ children, isFullscreen, onToggleFullscreen }) => {
     <div className={`flex h-screen ${bgClass} ${textClass} ${isFullscreen ? 'overflow-hidden' : ''}`}>
       {!isFullscreen && (
         <>
+          {/* Floating hamburger button for mobile */}
+          {isMobile && !isSidebarOpen && (
+            <button
+              className="fixed top-4 left-4 z-50 p-2 rounded-full bg-white bg-opacity-80 shadow-md hover:bg-opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              style={{ width: 44, height: 44 }}
+              aria-label="Open sidebar menu"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+              </svg>
+            </button>
+          )}
           <Sidebar
             isCollapsed={isCollapsed}
             isMobile={isMobile}
