@@ -226,9 +226,14 @@ function Dashboard1() {
     const token = localStorage.getItem('token');
     console.log('token:', token);
     if ((h === 12 || h === 24 || h === 48) && !token) {
-      alert('Please log in to view 12h, 24h, or 48h data.');
-      navigate('/login');
-      setHours(6); // force back to 6h
+      if (window.dispatchEvent) {
+        window.dispatchEvent(new Event('closeSidebar'));
+      }
+      setTimeout(() => {
+        alert('Please log in to view 12h, 24h, or 48h data.');
+        navigate('/login');
+        setHours(6); // force back to 6h
+      }, 100);
       return;
     }
     setHours(h);
@@ -268,8 +273,14 @@ function Dashboard1() {
     const token = localStorage.getItem('token');
     console.log('token:', token);
     if (!token) {
-      alert('Login required to download CSV');
-      navigate('/login');
+      // Try to close sidebar/overlays if present
+      if (window.dispatchEvent) {
+        window.dispatchEvent(new Event('closeSidebar'));
+      }
+      setTimeout(() => {
+        alert('Login required to download CSV');
+        navigate('/login');
+      }, 100);
       return;
     }
     const input = prompt(

@@ -55,8 +55,14 @@ const Sidebar = ({ isCollapsed, isMobile, isOpen, onToggleCollapse, onClose, the
   const activeClass = theme === 'dark' ? 'bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg' : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md';
 
   return (
-    <div className={`fixed inset-y-0 left-0 z-50 transform ${isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'} ${isCollapsed ? 'w-20' : 'w-64'} ${bgClass} ${textClass} border-r ${borderClass} flex flex-col transition-all duration-300 ease-in-out shadow-xl`}>
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-600 to-indigo-700">
+    <div
+      className={`fixed inset-y-0 left-0 z-50 transform ${isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'} ${isCollapsed ? 'w-20' : 'w-64'} ${bgClass} ${textClass} border-r ${borderClass} flex flex-col transition-all duration-300 ease-in-out shadow-xl`}
+      aria-label="Sidebar navigation"
+      role="navigation"
+      tabIndex={isOpen ? 0 : -1}
+      style={{ outline: isMobile && isOpen ? 'none' : undefined }}
+    >
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-600 to-indigo-700 relative">
         {!isCollapsed && (
           <div className="text-xl font-bold text-white flex items-center">
             <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-2">
@@ -74,6 +80,20 @@ const Sidebar = ({ isCollapsed, isMobile, isOpen, onToggleCollapse, onClose, the
             <path d="M3 12h18M3 6h18M3 18h18"/>
           </svg>
         </button>
+        {/* Mobile close button */}
+        {isMobile && (
+          <button
+            className="absolute top-2 right-2 p-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-40 text-white z-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            onClick={onClose}
+            aria-label="Close sidebar"
+            tabIndex={0}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        )}
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4 px-2">
