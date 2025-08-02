@@ -71,15 +71,17 @@ const Sidebar = ({ isCollapsed, isMobile, isOpen, onToggleCollapse, onClose, the
             Room Tracker
           </div>
         )}
-        <button 
-          className="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-all duration-200 transform hover:scale-110"
-          onClick={onToggleCollapse}
-          aria-label="Toggle sidebar"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">
-            <path d="M3 12h18M3 6h18M3 18h18"/>
-          </svg>
-        </button>
+        {!isMobile && (
+          <button 
+            className="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-all duration-200 transform hover:scale-110"
+            onClick={onToggleCollapse}
+            aria-label="Toggle sidebar"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">
+              <path d="M3 12h18M3 6h18M3 18h18"/>
+            </svg>
+          </button>
+        )}
         {/* Mobile close button */}
         {isMobile && (
           <button
