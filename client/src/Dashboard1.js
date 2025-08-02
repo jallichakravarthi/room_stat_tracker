@@ -546,7 +546,7 @@ function Dashboard1() {
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                   <div 
                     className="h-3 rounded-full bg-red-500 transition-all duration-500"
-                    style={{ width: latestData?.mq9?.co ? `${Math.min(100, latestData.mq9.co / 100 * 100)}%` : '0%' }}
+                    style={{ width: latestData?.mq9?.co ? `${Math.min(100, latestData.mq9.co / 9 * 100)}%` : '0%' }}
                   ></div>
                 </div>
               </div>
@@ -560,7 +560,7 @@ function Dashboard1() {
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                   <div 
                     className="h-3 rounded-full bg-green-500 transition-all duration-500"
-                    style={{ width: latestData?.mq9?.ch4 ? `${Math.min(100, latestData.mq9.ch4 / 1000 * 100)}%` : '0%' }}
+                    style={{ width: latestData?.mq9?.ch4 ? `${Math.min(100, latestData.mq9.ch4 / 15 * 100)}%` : '0%' }}
                   ></div>
                 </div>
               </div>
@@ -574,7 +574,7 @@ function Dashboard1() {
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                   <div 
                     className="h-3 rounded-full bg-purple-500 transition-all duration-500"
-                    style={{ width: latestData?.mq9?.lpg ? `${Math.min(100, latestData.mq9.lpg / 1000 * 100)}%` : '0%' }}
+                    style={{ width: latestData?.mq9?.lpg ? `${Math.min(100, latestData.mq9.lpg / 500 * 100)}%` : '0%' }}
                   ></div>
                 </div>
               </div>
