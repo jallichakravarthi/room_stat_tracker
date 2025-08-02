@@ -120,8 +120,8 @@ function Dashboard1() {
         let chartLabels = [];
         let tempData = [];
         let humidityData = [];
-        if (token) {
-          // Authenticated: fetch from /history
+        if (token && hours > 6) {
+          // Authenticated and requesting >6h: fetch from /history
           const headers = {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -146,8 +146,16 @@ function Dashboard1() {
             navigate('/login');
             return;
           }
+        } else if (hours === 6) {
+          // For 6h view, use /recent-history (no auth)
+          const recentResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/room1/recent-history`);
+          if (!recentResponse.ok) throw new Error('Failed to fetch recent history');
+          const recentData = await recentResponse.json();
+          chartLabels = recentData.map(d => format(new Date(d.timestamp), 'HH:mm'));
+          tempData = recentData.map(d => d.temperature);
+          humidityData = recentData.map(d => d.humidity);
         } else {
-          // Guest: fetch all and filter client-side
+          // For <6h, fetch all and filter client-side (if needed)
           const latestResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/room1`);
           if (latestResponse.status === 401 || latestResponse.status === 403) {
             console.error('[Dashboard1] 401/403 on guest fetch');
@@ -200,12 +208,12 @@ function Dashboard1() {
       }
     };
 
-    console.log('[Dashboard1] Mount: Starting polling every 12 seconds');
+    console.log('[Dashboard1] Mount: Starting polling every 9 seconds');
     fetchData();
     const interval = setInterval(() => {
       console.log('[Dashboard1] Polling: Fetching data...');
       fetchData();
-    }, 12000);
+    }, 9000);
     return () => {
       console.log('[Dashboard1] Unmount: Clearing polling interval');
       clearInterval(interval);

@@ -122,6 +122,20 @@ router.get('/history', requireAuth, async (req, res) => {
   }
 });
 
+// returns sensor data upto 6hrs
+router.get('/recent-history', async (req, res) => {
+  try {
+    let hours = 6;
+
+    const since = new Date(Date.now() - hours * 60 * 60 * 1000);
+    const data = await SensorData.find({ timestamp: { $gte: since } }).sort({ timestamp: 1 });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 
 
 // GET all sensor data
