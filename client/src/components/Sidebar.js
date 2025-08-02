@@ -137,7 +137,7 @@ const Sidebar = ({ isCollapsed, isMobile, isOpen, onToggleCollapse, onClose, the
       </nav>
 
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        {user ? (
+        {user && !isCollapsed ? (
           <div className="flex flex-col items-start space-y-2">
             <div className="text-xs text-gray-500 dark:text-gray-400">Logged in as:</div>
             <div className="font-semibold text-gray-900 dark:text-white">{user.username}</div>
@@ -146,6 +146,13 @@ const Sidebar = ({ isCollapsed, isMobile, isOpen, onToggleCollapse, onClose, the
               className="mt-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs"
               onClick={() => { localStorage.removeItem('token'); window.location.reload(); }}
             >Logout</button>
+          </div>
+        ) : user && isCollapsed ? (
+          <div className="flex flex-col items-center">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400 dark:text-gray-500 mb-1">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M6 20c0-2 4-3 6-3s6 1 6 3" />
+            </svg>
           </div>
         ) : null}
         <button 
