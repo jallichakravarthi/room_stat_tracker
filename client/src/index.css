@@ -1,3 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS variables for design tokens */
+:root {
+  /* Primary colors */
+  --primary-50: #f0f9ff;
+  --primary-100: #e0f2fe;
+  --primary-200: #bae6fd;
+  --primary-300: #7dd3fc;
+  --primary-400: #38bdf8;
+  --primary-500: #0ea5e9;
+  --primary-600: #0284c7;
+  --primary-700: #0369a1;
+  --primary-800: #075985;
+  --primary-900: #0c4a6e;
+  
+  /* Status colors */
+  --status-good: #10b981;
+  --status-warning: #f59e0b;
+  --status-critical: #ef4444;
+  
+  /* Dashboard colors */
+  --dashboard-bg-light: #f8fafc;
+  --dashboard-bg-dark: #0f172a;
+  --card-bg-light: #ffffff;
+  --card-bg-dark: #1e293b;
+  --text-light: #334155;
+  --text-dark: #f1f5f9;
+}
+
+/* Dark mode variables */
+.dark {
+  --dashboard-bg: var(--dashboard-bg-dark);
+  --card-bg: var(--card-bg-dark);
+  --text-color: var(--text-dark);
+}
+
+/* Light mode variables */
+.light {
+  --dashboard-bg: var(--dashboard-bg-light);
+  --card-bg: var(--card-bg-light);
+  --text-color: var(--text-light);
+}
+
+/* Base styles */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +52,40 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--dashboard-bg);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Custom utility classes */
+.status-good {
+  color: var(--status-good);
+}
+
+.status-warning {
+  color: var(--status-warning);
+}
+
+.status-critical {
+  color: var(--status-critical);
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-transition {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

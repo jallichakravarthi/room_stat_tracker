@@ -60,6 +60,7 @@ function composeAlertEmail(data) {
 
 // POST new sensor data
 router.post('/', async (req, res) => {
+  console.log(req.body);
   try {
     const incoming = req.body;
     console.log('Incoming data:', incoming);

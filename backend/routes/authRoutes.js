@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
-
+const requireAuth = require('../middleware/auth');
 const JWT_SECRET = process.env.JWT_SECRET || 'yoursecretkey';
 
 // Register
@@ -35,6 +35,18 @@ router.post('/login', async (req, res) => {
     res.json({ token });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// profile details, returns username and email
+router.get('/profile', requireAuth, async (req, res) => {
+  console.log('GET api/auth/profile',req.user);
+  try {
+    const user = await User.findById(req.user.id).select('username email');
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json({ username: user.username, email: user.email });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'yoursecretkey';
 
-module.exports = function (req, res, next) {
+const auth = function (req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(403).json({ error: 'Access denied' });
@@ -16,3 +16,5 @@ module.exports = function (req, res, next) {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
+
+module.exports = auth;
