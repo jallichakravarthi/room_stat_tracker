@@ -395,6 +395,7 @@ function Dashboard1() {
       .sort((a, b) => a[0] - b[0])
       .map(([timestamp, b]) => [
         new Date(timestamp).toLocaleString(),
+        timestamp,
         (b.temperature / b.count).toFixed(2),
         (b.humidity / b.count).toFixed(2),
         (b.mq9.co / b.count).toFixed(2),
