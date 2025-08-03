@@ -47,6 +47,10 @@ while True:
 
         temperature = round(temperature, 1)
         humidity = round(humidity, 1)
+        if temperature > 75:
+            temperature =75
+        if humidity > 100:
+            humidity = 100
 
         # === MQ ADC reads ===
         mq135_adc = read_adc(0)
@@ -68,6 +72,18 @@ while True:
         co = get_ppm(ratio_mq9, -0.72, 0.34)
         ch4 = get_ppm(ratio_mq9, -0.38, 0.48)
         lpg = get_ppm(ratio_mq9, -0.47, 0.38)
+
+        # Safety thresholds (indoor safe levels)
+        if co2 > 2000:
+            co2 = 2000
+        if nh3 > 25:
+            nh3 = 25
+        if co > 35:
+            co = 35
+        if ch4 > 10000:
+            ch4 = 10000
+        if lpg > 1000:
+            lpg = 1000
 
         # === Payload ===
         payload = {
