@@ -105,7 +105,7 @@ function Dashboard1() {
         
         // Update recent data (last 10 entries)
         setRecentData(latestDataArray.slice(0, 10));
-        console.log('[Dashboard1] Updated recentData:', latestDataArray.slice(0, 10));
+        console.log('[Dashboard1] Updated recentData (last 12s):', latestDataArray.slice(0, 10));
 
         // Handle 401/403 on initial fetch
         if (latestResponse.status === 401 || latestResponse.status === 403) {
@@ -208,12 +208,12 @@ function Dashboard1() {
       }
     };
 
-    console.log('[Dashboard1] Mount: Starting polling every 9 seconds');
+    console.log('[Dashboard1] Mount: Starting polling every 12 seconds');
     fetchData();
     const interval = setInterval(() => {
       console.log('[Dashboard1] Polling: Fetching data...');
       fetchData();
-    }, 9000);
+    }, 12000);
     return () => {
       console.log('[Dashboard1] Unmount: Clearing polling interval');
       clearInterval(interval);
@@ -244,7 +244,7 @@ function Dashboard1() {
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
-          return 9;
+          return 12;
         }
         return prev - 1;
       });

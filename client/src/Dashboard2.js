@@ -91,7 +91,7 @@ function Dashboard2() {
         const latest = latestDataArray.length > 0 ? latestDataArray[0] : null;
         
         if (latest) {
-          // Check if data is recent (within last 9 seconds)
+          // Check if data is recent (within last 12 seconds)
           const ageInSeconds = (Date.now() - new Date(latest.timestamp)) / 1000;
           if (ageInSeconds <= 12) {
             setLatestData(latest);
@@ -105,7 +105,7 @@ function Dashboard2() {
         
         // Update recent data (last 10 entries)
         setRecentData(latestDataArray.slice(0, 10));
-        console.log('[Dashboard1] Updated recentData:', latestDataArray.slice(0, 10));
+        console.log('[Dashboard2] Updated recentData (last 12s):', latestDataArray.slice(0, 10));
 
         // Handle 401/403 on initial fetch
         if (latestResponse.status === 401 || latestResponse.status === 403) {
@@ -208,12 +208,12 @@ function Dashboard2() {
       }
     };
 
-    console.log('[Dashboard2] Mount: Starting polling every 9 seconds');
+    console.log('[Dashboard2] Mount: Starting polling every 12 seconds');
     fetchData();
     const interval = setInterval(() => {
       console.log('[Dashboard2] Polling: Fetching data...');
       fetchData();
-    }, 9000);
+    }, 12000);
     return () => {
       console.log('[Dashboard2] Unmount: Clearing polling interval');
       clearInterval(interval);
@@ -239,7 +239,7 @@ function Dashboard2() {
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
-          return 9;
+          return 12;
         }
         return prev - 1;
       });
