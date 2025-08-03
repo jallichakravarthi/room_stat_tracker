@@ -337,7 +337,11 @@ function Dashboard2() {
         : num * 86400000;
     const buckets = new Map();
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/room2/history?hours=${hours}`
+      `${process.env.REACT_APP_API_URL}/api/room2/history?hours=${hours}`,
+      {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
     ).catch((error) => {
       console.log(error, "error fetching data for CSV Export");
       alert("Error fetching data for CSV Export");
