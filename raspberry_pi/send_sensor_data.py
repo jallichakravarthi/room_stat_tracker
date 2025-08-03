@@ -100,7 +100,7 @@ while True:
         else:
             print(f"❌ Failed to send. Status code: {response.status_code}, Response: {response.text}\n")
 
-        time.sleep(5)
+        time.sleep(3)
 
     except KeyboardInterrupt:
         print("\n🛑 Stopped by user")
@@ -108,4 +108,4 @@ while True:
 
     except Exception as e:
         print(f"❌ Error during reading or sending: {e}")
-        time.sleep(5)
+        time.sleep(3)

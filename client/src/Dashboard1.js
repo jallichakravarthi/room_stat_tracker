@@ -32,7 +32,7 @@ function Dashboard1() {
   const [recentData, setRecentData] = useState([]);
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
   const [isLive, setIsLive] = useState(false);
-  const [countdown, setCountdown] = useState(9);
+  const [countdown, setCountdown] = useState(12);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1200 && window.innerHeight >= 800);
   // Default to 6 hours for chart, 30-min interval
@@ -91,9 +91,9 @@ function Dashboard1() {
         const latest = latestDataArray.length > 0 ? latestDataArray[0] : null;
         
         if (latest) {
-          // Check if data is recent (within last 9 seconds)
+          // Check if data is recent (within last 12 seconds)
           const ageInSeconds = (Date.now() - new Date(latest.timestamp)) / 1000;
-          if (ageInSeconds <= 9) {
+          if (ageInSeconds <= 12) {
             setLatestData(latest);
             setIsLive(true); // Set to live when we receive recent data
           } else {
