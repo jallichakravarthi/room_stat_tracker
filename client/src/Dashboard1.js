@@ -357,8 +357,8 @@ function Dashboard1() {
       }, 1000);
       return;
     });
-    const data = await response.json();
-    for (const entry of data) {
+    const CSVdata = await response.json();
+    for (const entry of CSVdata) {
       const time = new Date(entry.timestamp).getTime();
       const bucketKey = Math.floor(time / intervalMs) * intervalMs;
       if (!buckets.has(bucketKey)) {
