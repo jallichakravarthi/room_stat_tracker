@@ -336,12 +336,14 @@ function Dashboard2() {
         ? num * 3600000
         : num * 86400000;
     const buckets = new Map();
-    const userToken = localStorage.getItem("token");
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/room2/history?hours=${hours}`,
+      `${process.env.REACT_APP_API_URL}/api/room1/history?hours=${hours}`,
       {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userToken}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     ).catch((error) => {
       console.log(error, "error fetching data for CSV Export");
