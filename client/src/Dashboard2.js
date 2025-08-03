@@ -350,6 +350,13 @@ function Dashboard2() {
       }, 1000);
       return;
     });
+    if (!response || !response.ok) {
+      alert("You are not authorized or your session has expired. Please login again.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+      return;
+    }
     const CSVdata = await response.json();
     for (const entry of CSVdata) {
       const time = new Date(entry.timestamp).getTime();
