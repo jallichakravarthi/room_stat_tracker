@@ -32,7 +32,7 @@ function Dashboard2() {
   const [recentData, setRecentData] = useState([]);
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
   const [isLive, setIsLive] = useState(false);
-  const [countdown, setCountdown] = useState(12);
+  const [countdown, setCountdown] = useState(30);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(
     window.innerWidth >= 1200 && window.innerHeight >= 800
@@ -98,9 +98,9 @@ function Dashboard2() {
         const latest = latestDataArray.length > 0 ? latestDataArray[0] : null;
 
         if (latest) {
-          // Check if data is recent (within last 12 seconds)
+          // Check if data is recent (within last 30 seconds)
           const ageInSeconds = (Date.now() - new Date(latest.timestamp)) / 1000;
-          if (ageInSeconds <= 12) {
+          if (ageInSeconds <= 30) {
             setLatestData(latest);
             setIsLive(true); // Set to live when we receive recent data
           } else {
@@ -243,12 +243,12 @@ function Dashboard2() {
       }
     };
 
-    console.log("[Dashboard2] Mount: Starting polling every 12 seconds");
+    console.log("[Dashboard2] Mount: Starting polling every 30 seconds");
     fetchData();
     const interval = setInterval(() => {
       console.log("[Dashboard2] Polling: Fetching data...");
       fetchData();
-    }, 12000);
+    }, 30000);
     return () => {
       console.log("[Dashboard2] Unmount: Clearing polling interval");
       clearInterval(interval);
@@ -274,7 +274,7 @@ function Dashboard2() {
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          return 12;
+          return 30;
         }
         return prev - 1;
       });
